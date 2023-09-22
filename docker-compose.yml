@@ -1,0 +1,52 @@
+# version: "3"
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     image: larvel-app
+#     container_name: app
+#     restart: unless-stopped
+#     environment:
+#       DB_HOST: localhost
+#       DB_PASSWORD: password
+#     volumes:
+#       - ./:/var/www
+#       - ./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+#   webserver:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile_nginx
+#     image: larvel-nginx 
+#     container_name: webserver 
+#     restart: unless-stopped
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - ./:/var/www
+#       - ./config/nginx/conf.d/:/etc/nginx/conf.d
+#     depends_on:
+#       - app  
+
+version: '3'
+services:
+  alpine_nginx:
+    build:
+        context: .
+        dockerfile: Dockerfile_nginx
+    container_name: alpine_nginx
+    restart: unless-stopped
+    links:
+      - alpine_php
+    ports:
+      - "8000:80"
+
+  alpine_php:
+    build:
+        context: .
+        dockerfile: Dockerfile_php
+    container_name: alpine_php
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
